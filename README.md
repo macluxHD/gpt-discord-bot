@@ -1,3 +1,10 @@
+# Warning!
+
+The history of the channels are **not** being sent to the moderations API so inappropriate messages could be sent to OpenAI as part of the context. This is only for messages that are sent before the bot has last been started. All new messages are being sent to the moderations API.
+
+I will add this soon but for now, please be aware of this. If someone is impatient and wants to add this feature, please feel free to do so by submitting a PR.
+
+---
 # GPT Discord Bot
 
 Discord bot written in Python that uses the [chat completions API](https://platform.openai.com/docs/api-reference/chat/create) to have conversations with [OpenAI models](https://platform.openai.com/docs/models), and the [moderations API](https://beta.openai.com/docs/api-reference/moderations) to filter the messages.
