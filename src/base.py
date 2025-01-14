@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Optional, List
+import re
 
 SEPARATOR_TOKEN = "<|endoftext|>"
 
@@ -78,7 +79,7 @@ class Prompt:
             if not bot_name in message.user:
                 yield {
                     "role": "user",
-                    "name": message.user,
+                    "name": re.sub(r'[^a-zA-Z0-9_-]', '', message.user),
                     "content": message.text,
                 }
             else:
