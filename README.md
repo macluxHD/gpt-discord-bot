@@ -1,6 +1,6 @@
 # GPT Discord Bot
 
-Discord bot written in Python that uses the [chat completions API](https://platform.openai.com/docs/api-reference/chat/create) to have conversations with [openai models](https://platform.openai.com/docs/models), and the [moderations API](https://beta.openai.com/docs/api-reference/moderations) to filter the messages.
+Discord bot written in Python that uses the [chat completions API](https://platform.openai.com/docs/api-reference/chat/create) to have conversations with [OpenAI models](https://platform.openai.com/docs/models), and the [moderations API](https://beta.openai.com/docs/api-reference/moderations) to filter the messages.
 
 This bot uses the [OpenAI Python Library](https://github.com/openai/openai-python) and [discord.py](https://discordpy.readthedocs.io/).
 
