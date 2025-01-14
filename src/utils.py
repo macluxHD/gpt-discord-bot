@@ -10,7 +10,7 @@ from discord import Message as DiscordMessage
 from typing import Optional, List
 import discord
 
-from src.constants import MAX_CHARS_PER_REPLY_MSG, INACTIVATE_THREAD_PREFIX
+from src.constants import MAX_CHARS_PER_REPLY_MSG
 
 
 def discord_message_to_message(message: DiscordMessage) -> Optional[Message]:
@@ -45,19 +45,7 @@ def is_last_message_stale(
         and last_message.author
         and last_message.author.id != bot_id
     )
-
-
-async def close_thread(thread: discord.Thread):
-    await thread.edit(name=INACTIVATE_THREAD_PREFIX)
-    await thread.send(
-        embed=discord.Embed(
-            description="**Thread closed** - Context limit reached, closing...",
-            color=discord.Color.blue(),
-        )
-    )
-    await thread.edit(archived=True, locked=True)
-
-# 
+ 
 def should_block(guild: Optional[discord.Guild], channel: DiscordMessage) -> bool:
     if channel is not None and channel.id not in ALLOWED_CHANNEL_IDS:
         # not allowed in this channel

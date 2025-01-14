@@ -23,6 +23,8 @@ DISCORD_BOT_TOKEN = os.environ["DISCORD_BOT_TOKEN"]
 DISCORD_CLIENT_ID = os.environ["DISCORD_CLIENT_ID"]
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 DEFAULT_MODEL = os.environ["DEFAULT_MODEL"]
+DEFAULT_TEMPERATURE = 1.0
+DEFAULT_MAX_TOKENS = 512
 
 ALLOWED_SERVER_IDS: List[int] = []
 server_ids = os.environ["ALLOWED_SERVER_IDS"].split(",")
@@ -40,8 +42,8 @@ for s in server_channels:
     values = s.split(":")
     SERVER_TO_MODERATION_CHANNEL[int(values[0])] = int(values[1])
 
-# Send Messages, Create Public Threads, Send Messages in Threads, Manage Messages, Manage Threads, Read Message History, Use Slash Command
-BOT_INVITE_URL = f"https://discord.com/api/oauth2/authorize?client_id={DISCORD_CLIENT_ID}&permissions=328565073920&scope=bot"
+# Send Messages, Manage Messages, Read Message History, Use Slash Command
+BOT_INVITE_URL = f"https://discord.com/api/oauth2/authorize?client_id={DISCORD_CLIENT_ID}&permissions=2147559424&scope=bot"
 
 MODERATION_VALUES_FOR_BLOCKED = {
     "harassment": 0.5,
@@ -74,9 +76,7 @@ MODERATION_VALUES_FOR_FLAGGED = {
 SECONDS_DELAY_RECEIVING_MSG = (
     3  # give a delay for the bot to respond so it can catch multiple messages
 )
-MAX_THREAD_MESSAGES = 200
-ACTIVATE_THREAD_PREFX = "💬✅"
-INACTIVATE_THREAD_PREFIX = "💬❌"
+MAX_CHANNEL_MESSAGES = 200
 MAX_CHARS_PER_REPLY_MSG = (
     1500  # discord has a 2k limit, we just break message into 1.5k
 )

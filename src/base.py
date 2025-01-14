@@ -39,7 +39,7 @@ class Config:
 
 
 @dataclass(frozen=True)
-class ThreadConfig:
+class ChannelConfig:
     model: str
     max_tokens: int
     temperature: float
