@@ -8,6 +8,9 @@ from src.base import Config
 
 load_dotenv()
 
+DATA_DIR = os.path.join(os.getcwd(), "data")
+os.makedirs(DATA_DIR, exist_ok=True)
+CHANNEL_SETTINGS_FILE = os.path.join(DATA_DIR, "channel_settings.json")
 
 # load config.yaml
 CONFIG: Config = dacite.from_dict(

@@ -14,7 +14,8 @@ from src.constants import (
     AVAILABLE_MODELS,
     DEFAULT_MODEL,
     DEFAULT_TEMPERATURE,
-    DEFAULT_MAX_TOKENS
+    DEFAULT_MAX_TOKENS,
+    CHANNEL_SETTINGS_FILE,
 )
 import asyncio
 from src.utils import (
@@ -30,6 +31,7 @@ from src.moderation import (
     send_moderation_blocked_message,
     send_moderation_flagged_message,
 )
+import os, json
 
 logging.basicConfig(
     format="[%(asctime)s] [%(filename)s:%(lineno)d] %(message)s", level=logging.INFO
@@ -56,10 +58,16 @@ async def on_ready():
             else:
                 messages.append(m)
         completion.MY_BOT_EXAMPLE_CONVOS.append(Conversation(messages=messages))
+        
+    # load channel settings
+    if os.path.exists(CHANNEL_SETTINGS_FILE):
+        with open(CHANNEL_SETTINGS_FILE, "r") as f:
+            saved_data = json.load(f)
+            for channel_id_str, config_dict in saved_data.items():
+                channel_data[int(channel_id_str)] = ChannelConfig(**config_dict)
     await tree.sync()
 
 
-# /chat message:
 @tree.command(name="settings", description="Set settings for current channel")
 @discord.app_commands.checks.has_permissions(send_messages=True)
 @discord.app_commands.checks.has_permissions(view_channel=True)
@@ -74,9 +82,9 @@ async def on_ready():
 )
 async def chat_command(
     int: discord.Interaction,
-    model: AVAILABLE_MODELS = DEFAULT_MODEL,
-    temperature: Optional[float] = DEFAULT_TEMPERATURE,
-    max_tokens: Optional[int] = DEFAULT_MAX_TOKENS,
+    model: Optional[AVAILABLE_MODELS],
+    temperature: Optional[float],
+    max_tokens: Optional[int],
 ):
     try:
         # block servers not in allow list
@@ -102,17 +110,27 @@ async def chat_command(
             )
             return
 
-        channel_data[int.channel.id] = ChannelConfig(
-            model=model, max_tokens=max_tokens, temperature=temperature
+        config = channel_data.setdefault(
+            int.channel.id,
+            ChannelConfig(model=DEFAULT_MODEL, temperature=DEFAULT_TEMPERATURE, max_tokens=DEFAULT_MAX_TOKENS)
         )
+
+        if model is not None:
+            config.model = model
+        if temperature is not None:
+            config.temperature = temperature
+        if max_tokens is not None:
+            config.max_tokens = max_tokens
+    
+        channel_data[int.channel.id] = config
         
         embed = discord.Embed(
             description=f"Settings for {int.channel.mention}",
             color=discord.Color.green(),
         )
-        embed.add_field(name="model", value=model)
-        embed.add_field(name="temperature", value=temperature, inline=True)
-        embed.add_field(name="max_tokens", value=max_tokens, inline=True)
+        embed.add_field(name="model", value=config.model)
+        embed.add_field(name="temperature", value=config.temperature, inline=True)
+        embed.add_field(name="max_tokens", value=config.max_tokens, inline=True)
 
         await int.response.send_message(embed=embed)
 
@@ -121,6 +139,9 @@ async def chat_command(
         await int.response.send_message(
             f"Failed to start chat {str(e)}", ephemeral=True
         )
+        
+    with open(CHANNEL_SETTINGS_FILE, "w") as f:
+        json.dump({str(k): v.__dict__ for k, v in channel_data.items()}, f)
 
 
 # calls for each message
@@ -202,19 +223,18 @@ async def on_message(message: DiscordMessage):
         channel_messages = [x for x in channel_messages if x is not None]
         channel_messages.reverse()
 
-        if channel.id not in channel_data:
-            channel_data[channel.id] = ChannelConfig(
+        current_channel_data = channel_data.get(channel.id, ChannelConfig(
                 model=DEFAULT_MODEL,
                 max_tokens=DEFAULT_MAX_TOKENS,
                 temperature=DEFAULT_TEMPERATURE,
-            )
+            ))
 
         # generate the response
         async with channel.typing():
             response_data = await generate_completion_response(
                 messages=channel_messages,
                 user=message.author,
-                channel_config=channel_data[channel.id],
+                channel_config=current_channel_data,
             )
 
         if is_last_message_stale(

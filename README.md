@@ -7,7 +7,7 @@ This bot uses the [OpenAI Python Library](https://github.com/openai/openai-pytho
 
 # Features
 
-- `/settings` sets inference settings for the current text channel. You can optionally also adjust the `temperature` and `max_tokens` parameters and using `model` choose one of the available models.
+- `/settings` sets inference settings for the current text channel. You can optionally also adjust the `temperature` and `max_tokens` parameters and using `model` choose one of the available models. If you do not specify any of these parameters, the bot will just show the settings for the current channel.
 - The model will generate a reply for every user message in the whitelisted channels
 - Up to 200 previous messages will be passed to the model for each request, so the model will remember previous messages in the thread this can be adjusted in `src/constants.py` with `MAX_CHANNEL_MESSAGES`
 - you can customize the bot instructions by modifying `config.yaml`

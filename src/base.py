@@ -38,7 +38,7 @@ class Config:
     example_conversations: List[Conversation]
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=False)
 class ChannelConfig:
     model: str
     max_tokens: int
