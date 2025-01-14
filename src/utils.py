@@ -47,7 +47,7 @@ def is_last_message_stale(
     )
  
 def should_block(guild: Optional[discord.Guild], channel: DiscordMessage) -> bool:
-    if channel is not None and channel.id not in ALLOWED_CHANNEL_IDS:
+    if channel is not None and channel.id not in ALLOWED_CHANNEL_IDS and len(ALLOWED_CHANNEL_IDS) > 0:
         # not allowed in this channel
         logger.info(f"Channel {channel} not allowed")
         return True
@@ -57,7 +57,7 @@ def should_block(guild: Optional[discord.Guild], channel: DiscordMessage) -> boo
         logger.info(f"DM not supported")
         return True
 
-    if guild.id and guild.id not in ALLOWED_SERVER_IDS:
+    if guild.id and guild.id not in ALLOWED_SERVER_IDS and len(ALLOWED_SERVER_IDS) > 0:
         # not allowed in this server
         logger.info(f"Guild {guild} not allowed")
         return True

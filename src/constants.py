@@ -28,19 +28,22 @@ DEFAULT_MAX_TOKENS = 512
 
 ALLOWED_SERVER_IDS: List[int] = []
 server_ids = os.environ["ALLOWED_SERVER_IDS"].split(",")
-for s in server_ids:
-    ALLOWED_SERVER_IDS.append(int(s))
+if server_ids != [""]:
+    for s in server_ids:
+        ALLOWED_SERVER_IDS.append(int(s))
     
 ALLOWED_CHANNEL_IDS: List[int] = []
 channel_ids = os.environ["ALLOWED_CHANNEL_IDS"].split(",")
-for s in channel_ids:
-    ALLOWED_CHANNEL_IDS.append(int(s))
+if channel_ids != [""]:
+    for s in channel_ids:
+        ALLOWED_CHANNEL_IDS.append(int(s))
 
 SERVER_TO_MODERATION_CHANNEL: Dict[int, int] = {}
 server_channels = os.environ.get("SERVER_TO_MODERATION_CHANNEL", "").split(",")
-for s in server_channels:
-    values = s.split(":")
-    SERVER_TO_MODERATION_CHANNEL[int(values[0])] = int(values[1])
+if server_channels != [""]:
+    for s in server_channels:
+        values = s.split(":")
+        SERVER_TO_MODERATION_CHANNEL[int(values[0])] = int(values[1])
 
 # Send Messages, Manage Messages, Read Message History, Use Slash Command
 BOT_INVITE_URL = f"https://discord.com/api/oauth2/authorize?client_id={DISCORD_CLIENT_ID}&permissions=2147559424&scope=bot"
