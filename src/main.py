@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import Literal, Optional, Union
+from typing import Optional
 
 import discord
 from discord import Message as DiscordMessage, app_commands
