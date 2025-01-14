@@ -87,7 +87,7 @@ async def chat_command(
             return
 
         # block servers not in allow list
-        if should_block(guild=int.guild):
+        if should_block(guild=int.guild, channel=int.channel):
             return
 
         user = int.user
@@ -189,7 +189,7 @@ async def chat_command(
 async def on_message(message: DiscordMessage):
     try:
         # block servers not in allow list
-        if should_block(guild=message.guild):
+        if should_block(guild=message.guild, channel=message.channel):
             return
 
         # ignore messages from the bot

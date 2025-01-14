@@ -28,6 +28,11 @@ ALLOWED_SERVER_IDS: List[int] = []
 server_ids = os.environ["ALLOWED_SERVER_IDS"].split(",")
 for s in server_ids:
     ALLOWED_SERVER_IDS.append(int(s))
+    
+ALLOWED_CHANNEL_IDS: List[int] = []
+channel_ids = os.environ["ALLOWED_CHANNEL_IDS"].split(",")
+for s in channel_ids:
+    ALLOWED_CHANNEL_IDS.append(int(s))
 
 SERVER_TO_MODERATION_CHANNEL: Dict[int, int] = {}
 server_channels = os.environ.get("SERVER_TO_MODERATION_CHANNEL", "").split(",")

@@ -1,5 +1,6 @@
 from src.constants import (
     ALLOWED_SERVER_IDS,
+    ALLOWED_CHANNEL_IDS
 )
 import logging
 
@@ -56,8 +57,13 @@ async def close_thread(thread: discord.Thread):
     )
     await thread.edit(archived=True, locked=True)
 
-
-def should_block(guild: Optional[discord.Guild]) -> bool:
+# 
+def should_block(guild: Optional[discord.Guild], channel: DiscordMessage) -> bool:
+    if channel is not None and channel.id not in ALLOWED_CHANNEL_IDS:
+        # not allowed in this channel
+        logger.info(f"Channel {channel} not allowed")
+        return True
+    
     if guild is None:
         # dm's not supported
         logger.info(f"DM not supported")
@@ -67,4 +73,5 @@ def should_block(guild: Optional[discord.Guild]) -> bool:
         # not allowed in this server
         logger.info(f"Guild {guild} not allowed")
         return True
+    
     return False
