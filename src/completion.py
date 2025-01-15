@@ -150,8 +150,15 @@ async def process_response(
                 color=discord.Color.red(),
             )
         )
+        
+    # TODO: Maybe handle this differently in the future but in general this shouldn't happen
     elif status is CompletionResult.TOO_LONG:
-        logger.info("TOO LONG COMPLETION FIX THIS HELLLLLOOOO???????????????????????????")
+        await channel.send(
+            embed=discord.Embed(
+                description=f"**Response too long** - {status_text}",
+                color=discord.Color.yellow(),
+            )
+        )
     elif status is CompletionResult.INVALID_REQUEST:
         await channel.send(
             embed=discord.Embed(
